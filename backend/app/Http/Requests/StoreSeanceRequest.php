@@ -17,6 +17,7 @@ class StoreSeanceRequest extends FormRequest
             'programme_id' => 'required|exists:programmes,id',
             'date_seance' => 'required|date',
             'heure_debut' => 'nullable|date_format:H:i',
+            'heure_fin' => 'nullable|date_format:H:i|after:heure_debut',
             'lieu' => 'nullable|string|max:150',
             'statut' => 'nullable|in:planifiee,terminee,annulee',
         ];

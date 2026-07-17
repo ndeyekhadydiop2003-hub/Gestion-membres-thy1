@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Programme extends Model
 {
-    protected $fillable = ['nom', 'description', 'jour_semaine', 'actif', 'cree_par'];
+    protected $fillable = ['nom', 'description', 'jour_semaine', 'actif','couleur', 'cree_par'];
 
     public function seances()
     {

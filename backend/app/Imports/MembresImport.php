@@ -10,10 +10,12 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
 
-class MembresImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnError
+class MembresImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnError, SkipsOnFailure
 {
-    use SkipsErrors;
+    use SkipsErrors, SkipsFailures;
 
     public int $nombreImportes = 0;
 
@@ -51,6 +53,16 @@ class MembresImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnE
             'sexe' => 'required|in:M,F,m,f',
             'date_adhesion' => 'nullable|date',
             'email' => 'nullable|email',
+        ];
+    }
+
+    public function customValidationMessages(): array
+    {
+        return [
+            'nom.required' => 'Le nom est obligatoire.',
+            'prenom.required' => 'Le prénom est obligatoire.',
+            'sexe.required' => 'Le sexe est obligatoire.',
+            'sexe.in' => 'Le sexe doit être M ou F.',
         ];
     }
 }

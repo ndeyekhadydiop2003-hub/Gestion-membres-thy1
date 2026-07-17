@@ -16,6 +16,7 @@ class UpdateSeanceRequest extends FormRequest
         return [
             'date_seance' => 'sometimes|required|date',
             'heure_debut' => 'nullable|date_format:H:i',
+            'heure_fin' => 'nullable|date_format:H:i|after:heure_debut',
             'lieu' => 'nullable|string|max:150',
             'statut' => 'nullable|in:planifiee,terminee,annulee',
         ];

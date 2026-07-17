@@ -8,6 +8,7 @@ use App\Models\Presence;
 use App\Models\Seance;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class PresenceController extends Controller
 {
@@ -66,11 +67,54 @@ class PresenceController extends Controller
             'statut' => 'required|in:present,absent,excuse',
         ]);
 
-        $presence = Presence::updateOrCreate(
-            ['seance_id' => $seance->id, 'membre_id' => $membre->id],
-            ['statut' => $request->statut, 'marque_par' => Auth::id()]
-        );
+        $presenceExistante = Presence::where('seance_id', $seance->id)
+            ->where('membre_id', $membre->id)
+            ->first();
+
+        if ($presenceExistante) {
+            return response()->json([
+                'message' => 'Cette présence a déjà été enregistrée et ne peut plus être modifiée (traçabilité).',
+            ], 422);
+        }
+
+        $presence = Presence::create([
+            'seance_id' => $seance->id,
+            'membre_id' => $membre->id,
+            'statut' => $request->statut,
+            'marque_par' => Auth::id(),
+        ]);
 
         return new PresenceResource($presence->load('membre'));
     }
+
+    public function membresAvecPresence(Request $request, Seance $seance)
+{
+    $this->authorize('view', $seance);
+
+    $query = \App\Models\Membre::where('statut', 'actif');
+
+    if ($request->filled('recherche')) {
+        $recherche = $request->recherche;
+        $query->where(function ($q) use ($recherche) {
+            $q->where('nom', 'like', "%{$recherche}%")
+              ->orWhere('prenom', 'like', "%{$recherche}%")
+              ->orWhere('email', 'like', "%{$recherche}%");
+        });
+    }
+
+    $membres = $query->orderBy('nom')->get();
+    $presences = Presence::where('seance_id', $seance->id)->pluck('statut', 'membre_id');
+
+    $data = $membres->map(fn ($m) => [
+        'id' => $m->id,
+        'identifiant' => 'TY-' . str_pad($m->id, 5, '0', STR_PAD_LEFT),
+        'nom' => $m->nom,
+        'prenom' => $m->prenom,
+        'profession' => $m->profession,
+        'email' => $m->email,
+        'statut_presence' => $presences[$m->id] ?? null,
+    ]);
+
+    return response()->json(['data' => $data, 'total' => $membres->count()]);
+}
 }

@@ -46,8 +46,9 @@ class ProgrammeController extends Controller
                 'presences as presents_count' => fn ($q) => $q->where('statut', 'present'),
                 'presences as absents_count' => fn ($q) => $q->where('statut', 'absent'),
                 'presences as excuses_count' => fn ($q) => $q->where('statut', 'excuse'),
-            ])->orderByDesc('date_seance');
+            ])->orderByDesc('date_seance')->take(5); // ← seulement les 5 dernières
         }]);
+
 
         return new ProgrammeResource($programme);
     }

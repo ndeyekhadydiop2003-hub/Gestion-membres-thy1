@@ -9,6 +9,7 @@ class Groupe extends Model
     protected $fillable = [
         'nom',
         'description',
+        'couleur',
     ];
 
     public function membres()

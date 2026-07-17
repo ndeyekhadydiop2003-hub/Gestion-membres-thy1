@@ -20,12 +20,12 @@ class User extends Authenticatable
         'role',
         'secret_2fa',
         'confirmation_2fa_le',
+        'token_activation',
+        'token_expire_le',
     ];
 
     protected $hidden = [
-        'password',
-        'remember_token',
-        'secret_2fa',
+        'password', 'remember_token', 'secret_2fa', 'token_activation',
     ];
 
     protected function casts(): array
@@ -33,6 +33,7 @@ class User extends Authenticatable
         return [
             'confirmation_2fa_le' => 'datetime',
             'derniere_connexion_le' => 'datetime',
+            'token_expire_le' => 'datetime',
             'password' => 'hashed',
             'secret_2fa' => 'encrypted',
         ];

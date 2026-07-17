@@ -50,4 +50,40 @@ class AuthController extends Controller
     {
         return response()->json($request->user());
     }
+
+    public function verifierTokenActivation($token)
+{
+    $user = User::where('token_activation', $token)->first();
+
+    if (!$user || $user->token_expire_le < now()) {
+        return response()->json(['message' => 'Ce lien est invalide ou a expiré.'], 404);
+    }
+
+    return response()->json([
+        'nom' => $user->nom,
+        'prenom' => $user->prenom,
+        'email' => $user->email,
+    ]);
+}
+
+public function activerCompte(Request $request, $token)
+    {
+        $user = User::where('token_activation', $token)->first();
+
+        if (!$user || $user->token_expire_le < now()) {
+            return response()->json(['message' => 'Ce lien est invalide ou a expiré.'], 404);
+        }
+
+        $request->validate([
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user->update([
+            'password' => $request->password, // casté en 'hashed' automatiquement
+            'token_activation' => null,
+            'token_expire_le' => null,
+        ]);
+
+        return response()->json(['message' => 'Compte activé avec succès.']);
+    }
 }

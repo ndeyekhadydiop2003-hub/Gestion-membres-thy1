@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
 import { groupesApi } from './groupesApi';
+import { useToast } from '../../context/ToastContext';
 
 const COULEURS = ['#15293f', '#2c4f7c', '#5b9bd5', '#e8a548', '#e07a5f', '#81b29a', '#a68cc4', '#6b7280'];
 
 export default function GroupeFormModal({ groupe, onFermer, onEnregistre }) {
+  const { showToast } = useToast();
   const estModification = !!groupe;
 
   const [nom, setNom] = useState(groupe?.nom || '');
@@ -24,6 +26,7 @@ export default function GroupeFormModal({ groupe, onFermer, onEnregistre }) {
       } else {
         await groupesApi.creer({ nom, description, couleur });
       }
+      showToast(estModification ? 'Groupe modifié avec succès.' : 'Groupe créé avec succès.');
       onEnregistre();
     } catch (err) {
       if (err.donnees?.errors) setErreurs(err.donnees.errors);

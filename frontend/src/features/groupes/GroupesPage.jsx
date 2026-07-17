@@ -1,12 +1,14 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Plus, Pencil, Trash2, Users } from 'lucide-react';
+import { Plus, Pencil, Trash2, Users, ChevronRight } from 'lucide-react';
 import { groupesApi } from './groupesApi';
 import GroupeFormModal from './GroupeFormModal';
 import GroupeMembresModal from './GroupeMembresModal';
 import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 
 export default function GroupesPage() {
   const { estSuperAdmin } = useAuth();
+  const { showToast } = useToast();
   const [groupes, setGroupes] = useState([]);
   const [chargement, setChargement] = useState(true);
   const [modalOuvert, setModalOuvert] = useState(false);
@@ -25,8 +27,11 @@ export default function GroupesPage() {
     if (!confirm(`Supprimer le groupe "${groupe.nom}" ?`)) return;
     try {
       await groupesApi.supprimer(groupe.id);
+      showToast('Groupe supprimé avec succès.');
       charger();
-    } catch (err) { alert(err.message); }
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
   };
 
   const modifier = (e, groupe) => {
@@ -37,10 +42,10 @@ export default function GroupesPage() {
 
   return (
     <div className="p-8 space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Groupes</h1>
+          <p className="text-xs font-medium text-[#2c4f7c] uppercase tracking-wide">Section Thiaroye Yeumbeul 1</p>
+          <h1 className="text-2xl font-bold text-slate-900 mt-1">Groupes</h1>
           <p className="text-slate-400 text-sm mt-1">Segmenter les membres pour la communication et le suivi.</p>
         </div>
         {estSuperAdmin && (
@@ -53,7 +58,6 @@ export default function GroupesPage() {
         )}
       </div>
 
-      {/* Grille */}
       {chargement ? (
         <p className="text-slate-400 text-sm">Chargement...</p>
       ) : groupes.length === 0 ? (
@@ -61,47 +65,51 @@ export default function GroupesPage() {
           <p className="text-slate-400 text-sm">Aucun groupe créé pour le moment.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {groupes.map((g) => (
-            <div
+            <button
               key={g.id}
               onClick={() => setGroupeSelectionne(g)}
-              className="bg-white rounded-xl border border-slate-100 p-5 hover:shadow-sm hover:border-slate-200 transition cursor-pointer"
+              className="text-left bg-white rounded-xl border border-slate-100 p-5 hover:border-slate-200 hover:shadow-sm transition group"
             >
-              {/* Icône (couleur du groupe) + nom + description */}
-              <div className="flex items-start gap-3 mb-5">
+              <div className="flex items-start justify-between mb-4">
                 <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: g.couleur || '#2c4f7c' }}
+                  className="w-11 h-11 rounded-lg flex items-center justify-center"
+                  style={{ backgroundColor: `${g.couleur || '#94a3b8'}20` }}
                 >
-                  <Users className="w-6 h-6 text-white" />
-                </div>
-                <div className="min-w-0 pt-0.5">
-                  <h3 className="font-bold text-slate-900 leading-tight">{g.nom}</h3>
-                  {g.description && (
-                    <p className="text-xs text-slate-400 mt-0.5 line-clamp-2">{g.description}</p>
-                  )}
-                </div>
-              </div>
-
-              {/* Compteur + boutons */}
-              <div className="flex items-end justify-between">
-                <div>
-                  <p className="text-3xl font-bold text-slate-900 leading-none">{g.nombre_membres ?? 0}</p>
-                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-medium mt-1">Membres</p>
+                  <Users className="w-5 h-5" style={{ color: g.couleur || '#94a3b8' }} />
                 </div>
                 {estSuperAdmin && (
-                  <div className="flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
-                    <button onClick={(e) => modifier(e, g)} className="p-2 text-slate-300 hover:text-[#2c4f7c] rounded-lg hover:bg-slate-50 transition">
+                  <div className="flex gap-1">
+                    <button
+                      onClick={(e) => modifier(e, g)}
+                      className="text-slate-400 hover:text-[#2c4f7c] p-1.5"
+                    >
                       <Pencil className="w-4 h-4" />
                     </button>
-                    <button onClick={(e) => supprimer(e, g)} className="p-2 text-slate-300 hover:text-red-500 rounded-lg hover:bg-red-50 transition">
+                    <button
+                      onClick={(e) => supprimer(e, g)}
+                      className="text-slate-400 hover:text-red-600 p-1.5"
+                    >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 )}
               </div>
-            </div>
+
+              <h3 className="font-semibold text-slate-900">{g.nom}</h3>
+              {g.description && <p className="text-sm text-slate-500 mt-1 line-clamp-2">{g.description}</p>}
+
+              <div className="mt-4 pt-4 border-t border-slate-50 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: g.couleur || '#94a3b8' }} />
+                  <span className="text-sm text-slate-600">{g.nombre_membres} membre{g.nombre_membres > 1 ? 's' : ''}</span>
+                </div>
+                <span className="flex items-center gap-1 text-xs text-[#2c4f7c] font-medium opacity-0 group-hover:opacity-100 transition">
+                  Voir <ChevronRight className="w-3.5 h-3.5" />
+                </span>
+              </div>
+            </button>
           ))}
         </div>
       )}
@@ -113,6 +121,7 @@ export default function GroupesPage() {
           onEnregistre={() => { setModalOuvert(false); charger(); }}
         />
       )}
+
       {groupeSelectionne && (
         <GroupeMembresModal
           groupe={groupeSelectionne}

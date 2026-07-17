@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { X, Upload } from 'lucide-react';
 import { membresApi } from './membresApi';
+import { useToast } from '../../context/ToastContext';
 
 const GROUPES_SANGUINS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
 export default function MembreFormModal({ membre, groupes, onFermer, onEnregistre }) {
+  const { showToast } = useToast();
   const estModification = !!membre;
 
   const [form, setForm] = useState({
@@ -43,6 +45,7 @@ export default function MembreFormModal({ membre, groupes, onFermer, onEnregistr
       } else {
         await membresApi.creer(donnees);
       }
+      showToast(estModification ? 'Membre modifié avec succès.' : 'Membre créé avec succès.');
       onEnregistre();
     } catch (err) {
       if (err.donnees?.errors) setErreurs(err.donnees.errors);
@@ -123,7 +126,7 @@ export default function MembreFormModal({ membre, groupes, onFermer, onEnregistr
             <Champ label="Statut" erreur={erreurs.statut}>
               <select value={form.statut} onChange={(e) => modifierChamp('statut', e.target.value)} className="champ">
                 <option value="actif">Actif</option>
-                <option value="inactif">inactif</option>
+                <option value="inactif">Inactif</option>
                 <option value="suspendu">Suspendu</option>
               </select>
             </Champ>

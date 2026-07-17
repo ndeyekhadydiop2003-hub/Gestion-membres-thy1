@@ -18,6 +18,7 @@ class SeanceResource extends JsonResource
             ]),
             'date_seance' => $this->date_seance?->format('Y-m-d'),
             'heure_debut' => $this->heure_debut,
+            'heure_fin' => $this->heure_fin,
             'lieu' => $this->lieu,
             'statut' => $this->statut,
             'presents' => $this->presents_count ?? null,

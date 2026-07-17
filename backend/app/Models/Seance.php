@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Seance extends Model
 {
-    protected $fillable = ['programme_id', 'date_seance', 'heure_debut', 'lieu', 'statut', 'cree_par'];
+    protected $fillable = ['programme_id', 'date_seance', 'heure_debut', 'heure_fin', 'lieu', 'statut', 'cree_par'];
 
     protected function casts(): array
     {

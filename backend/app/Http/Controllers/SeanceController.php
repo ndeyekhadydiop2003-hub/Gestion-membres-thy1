@@ -60,4 +60,20 @@ class SeanceController extends Controller
 
         return response()->json(['message' => 'Séance supprimée avec succès.']);
     }
+
+    public function parProgramme(\App\Models\Programme $programme)
+    {
+        $this->authorize('viewAny', Seance::class);
+
+        $seances = $programme->seances()
+            ->withCount([
+                'presences as presents_count' => fn ($q) => $q->where('statut', 'present'),
+                'presences as absents_count' => fn ($q) => $q->where('statut', 'absent'),
+                'presences as excuses_count' => fn ($q) => $q->where('statut', 'excuse'),
+            ])
+            ->orderByDesc('date_seance')
+            ->paginate(15);
+
+        return SeanceResource::collection($seances);
+    }
 }
