@@ -13,11 +13,11 @@ export const importExportApi = {
     return api.post('/import-export/importer-programmes', formData);
   },
 
-  exporter: (colonnes, masquerSensibles, groupeId) =>
+  exporter: (colonnes, masquerSensibles, commissionId) =>
     api.telecharger('/import-export/exporter', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ colonnes, masquer_sensibles: masquerSensibles, groupe_id: groupeId || null }),
+      body: JSON.stringify({ colonnes, masquer_sensibles: masquerSensibles, commission_id: commissionId || null }),
     }),
 
   historique: () => api.get('/import-export/historique'),

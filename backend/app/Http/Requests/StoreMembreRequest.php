@@ -24,7 +24,7 @@ class StoreMembreRequest extends FormRequest
             'email' => 'nullable|email|max:150|unique:membres,email',
             'date_adhesion' => 'required|date',
             'photo' => 'nullable|image|max:2048', // upload, 2 Mo max
-            'groupe_id' => 'nullable|exists:groupes,id',
+            'commission_id' => 'nullable|exists:commissions,id',
             'statut' => 'nullable|in:actif,inactif,suspendu',
 
             // Données sensibles (optionnelles à la création, gérées séparément)
@@ -45,7 +45,7 @@ class StoreMembreRequest extends FormRequest
             'date_adhesion.required' => "La date d'adhésion est obligatoire.",
             'photo.image' => 'Le fichier doit être une image.',
             'photo.max' => 'La photo ne doit pas dépasser 2 Mo.',
-            'groupe_id.exists' => "Le groupe sélectionné n'existe pas.",
+            'commission_id.exists' => "La commission sélectionnée n'existe pas.",
         ];
     }
 }

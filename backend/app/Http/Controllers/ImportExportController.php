@@ -54,7 +54,7 @@ class ImportExportController extends Controller
         $donnees = $request->validate([
             'colonnes' => 'required|array',
             'masquer_sensibles' => 'required|boolean',
-            'groupe_id' => 'nullable|exists:groupes,id',
+            'commission_id' => 'nullable|exists:commissions,id',
         ]);
 
         // Sécurité : même si masquer_sensibles=false, on bloque si l'utilisateur n'a pas le droit
@@ -68,13 +68,13 @@ class ImportExportController extends Controller
         HistoriqueOperation::create([
             'type' => 'export',
             'fichier' => $nomFichier,
-            'details' => \App\Models\Membre::when($donnees['groupe_id'] ?? null, fn ($q, $id) => $q->where('groupe_id', $id))->count() . ' lignes',
+            'details' => \App\Models\Membre::when($donnees['commission_id'] ?? null, fn ($q, $id) => $q->where('commission_id', $id))->count() . ' lignes',
             'utilisateur_id' => Auth::id(),
             'statut' => 'succes',
         ]);
 
         return Excel::download(
-            new MembresExport($donnees['colonnes'], $masquerSensibles, $donnees['groupe_id'] ?? null),
+            new MembresExport($donnees['colonnes'], $masquerSensibles, $donnees['commission_id'] ?? null),
             $nomFichier
         );
     }
@@ -170,7 +170,7 @@ class ImportExportController extends Controller
             $date = $this->normaliserDate($ligne['date_seance'] ?? null);
             $numeroLigne = $i + 2;
 
-            if (!$nomProgramme || !$identifiant || !$date || !in_array($statut, ['present', 'absent', 'excuse'])) {
+            if (!$nomProgramme || !$identifiant || !$date || !in_array($statut, ['present', 'absent'])) {
                 $resultat['erreurs'][] = "Présences ligne {$numeroLigne} : données invalides ou incomplètes.";
                 continue;
             }

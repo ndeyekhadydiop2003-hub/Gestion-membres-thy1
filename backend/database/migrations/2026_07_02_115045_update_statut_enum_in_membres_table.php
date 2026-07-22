@@ -7,6 +7,12 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            // SQLite ne gère pas les ENUM, on convertit juste les données
+            DB::table('membres')->where('statut', 'en_attente')->update(['statut' => 'inactif']);
+            return;
+        }
+
         // 1. On élargit d'abord l'enum pour accepter les deux valeurs en même temps
         DB::statement("ALTER TABLE membres MODIFY COLUMN statut ENUM('actif', 'en_attente', 'inactif', 'suspendu') NOT NULL DEFAULT 'actif'");
 
@@ -19,6 +25,11 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            DB::table('membres')->where('statut', 'inactif')->update(['statut' => 'en_attente']);
+            return;
+        }
+
         DB::statement("ALTER TABLE membres MODIFY COLUMN statut ENUM('actif', 'en_attente', 'inactif', 'suspendu') NOT NULL DEFAULT 'actif'");
         DB::table('membres')->where('statut', 'inactif')->update(['statut' => 'en_attente']);
         DB::statement("ALTER TABLE membres MODIFY COLUMN statut ENUM('actif', 'en_attente', 'suspendu') NOT NULL DEFAULT 'actif'");

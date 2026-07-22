@@ -48,7 +48,6 @@ export default function SeancesArchiveModal({ programme, onFermer, onSelectionne
                   <div className="flex gap-1.5 text-xs font-medium shrink-0">
                     <span className="bg-green-50 text-green-700 px-2 py-0.5 rounded-full">{s.presents}</span>
                     <span className="bg-red-50 text-red-700 px-2 py-0.5 rounded-full">{s.absents}</span>
-                    <span className="bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full">{s.excuses}</span>
                   </div>
                 </button>
               ))}

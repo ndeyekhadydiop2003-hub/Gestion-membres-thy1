@@ -23,7 +23,6 @@ class SeanceResource extends JsonResource
             'statut' => $this->statut,
             'presents' => $this->presents_count ?? null,
             'absents' => $this->absents_count ?? null,
-            'excuses' => $this->excuses_count ?? null,
             'presences' => PresenceResource::collection($this->whenLoaded('presences')),
         ];
     }

@@ -24,10 +24,10 @@ class MembreResource extends JsonResource
             'date_adhesion' => $this->date_adhesion?->format('Y-m-d'),
             'photo_url' => $this->photo_chemin ? asset('storage/' . $this->photo_chemin) : null,
             'statut' => $this->statut,
-            'groupe' => $this->whenLoaded('groupe', fn () => [
-                'id' => $this->groupe->id,
-                'nom' => $this->groupe->nom,
-                'couleur' => $this->groupe->couleur,
+            'commission' => $this->whenLoaded('commission', fn () => [
+                'id' => $this->commission->id,
+                'nom' => $this->commission->nom,
+                'couleur' => $this->commission->couleur,
             ]),
             'donnees_sensibles' => $this->whenLoaded('donneesSensibles', fn () => $this->donneesSensibles ? [
                 'nin' => $this->donneesSensibles->nin,

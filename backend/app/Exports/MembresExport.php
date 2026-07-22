@@ -12,16 +12,16 @@ class MembresExport implements FromQuery, WithHeadings, WithMapping
     public function __construct(
         private array $colonnes,
         private bool $masquerSensibles,
-        private ?int $groupeId = null
+        private ?int $commissionId = null
     ) {
     }
 
     public function query()
     {
-        $query = Membre::query()->with(['groupe', 'donneesSensibles']);
+        $query = Membre::query()->with(['commission', 'donneesSensibles']);
 
-        if ($this->groupeId) {
-            $query->where('groupe_id', $this->groupeId);
+        if ($this->commissionId) {
+            $query->where('commission_id', $this->commissionId);
         }
 
         return $query;

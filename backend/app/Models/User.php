@@ -15,11 +15,13 @@ class User extends Authenticatable
 
     protected $fillable = [
         'nom',
+        'prenom',
         'email',
         'password',
         'role',
         'secret_2fa',
         'confirmation_2fa_le',
+        'derniere_connexion_le',
         'token_activation',
         'token_expire_le',
     ];

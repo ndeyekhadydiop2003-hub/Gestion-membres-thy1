@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Search, Plus, Trash2, Pencil, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 import { membresApi } from './membresApi';
-import { groupesApi } from '../groupes/groupesApi';
+import { commissionsApi } from '../commissions/commissionsApi';
 import MembreFormModal from './MembreFormModal';
 import MembreDetailModal from './MembreDetailModal';
 import { useAuth } from '../../context/AuthContext';
@@ -17,9 +17,9 @@ export default function MembresPage() {
   const { estSuperAdmin } = useAuth();
   const [membres, setMembres] = useState([]);
   const [meta, setMeta] = useState(null);
-  const [groupes, setGroupes] = useState([]);
+  const [commissions, setCommissions] = useState([]);
   const [statutActif, setStatutActif] = useState('');
-  const [groupeId, setGroupeId] = useState('');
+  const [commissionId, setCommissionId] = useState('');
   const [recherche, setRecherche] = useState('');
   const [page, setPage] = useState(1);
   const [chargement, setChargement] = useState(true);
@@ -30,21 +30,21 @@ export default function MembresPage() {
   const charger = useCallback(() => {
     setChargement(true);
     membresApi
-      .lister({ statut: statutActif, groupe_id: groupeId, recherche, page })
+      .lister({ statut: statutActif, commission_id: commissionId, recherche, page })
       .then((reponse) => {
         setMembres(reponse.data);
         setMeta(reponse.meta);
       })
       .finally(() => setChargement(false));
-  }, [statutActif, groupeId, recherche, page]);
+  }, [statutActif, commissionId, recherche, page]);
 
   useEffect(() => { charger(); }, [charger]);
 
   useEffect(() => {
-    groupesApi.lister().then((r) => setGroupes(r.data));
+    commissionsApi.lister().then((r) => setCommissions(r.data));
   }, []);
 
-  useEffect(() => { setPage(1); }, [statutActif, groupeId, recherche]);
+  useEffect(() => { setPage(1); }, [statutActif, commissionId, recherche]);
 
   const supprimer = async (membre) => {
     if (!confirm(`Supprimer ${membre.nom} ${membre.prenom} ?`)) return;
@@ -92,12 +92,12 @@ export default function MembresPage() {
           />
         </div>
         <select
-          value={groupeId}
-          onChange={(e) => setGroupeId(e.target.value)}
+          value={commissionId}
+          onChange={(e) => setCommissionId(e.target.value)}
           className="border border-slate-200 rounded-lg px-4 py-2.5 text-sm"
         >
-          <option value="">Tous les groupes</option>
-          {groupes.map((g) => <option key={g.id} value={g.id}>{g.nom}</option>)}
+          <option value="">Toutes les commissions</option>
+          {commissions.map((c) => <option key={c.id} value={c.id}>{c.nom}</option>)}
         </select>
       </div>
 
@@ -181,7 +181,7 @@ export default function MembresPage() {
       {modalOuvert && (
         <MembreFormModal
           membre={membreEnEdition}
-          groupes={groupes}
+          commissions={commissions}
           onFermer={() => setModalOuvert(false)}
           onEnregistre={() => { setModalOuvert(false); charger(); }}
         />

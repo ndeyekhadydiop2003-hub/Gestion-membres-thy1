@@ -20,14 +20,14 @@ class MembreController extends Controller
     {
         $this->authorize('viewAny', Membre::class);
 
-        $query = Membre::query()->with('groupe');
+        $query = Membre::query()->with('commission');
 
         if ($request->filled('statut')) {
             $query->where('statut', $request->statut);
         }
 
-        if ($request->filled('groupe_id')) {
-            $query->where('groupe_id', $request->groupe_id);
+        if ($request->filled('commission_id')) {
+            $query->where('commission_id', $request->commission_id);
         }
 
         if ($request->filled('recherche')) {
@@ -62,7 +62,7 @@ class MembreController extends Controller
 
             $nouveauMembre = Membre::create(collect($donnees)->only([
                 'nom', 'prenom', 'sexe', 'date_naissance', 'niveau', 'profession',
-                'telephone', 'email', 'date_adhesion', 'photo_chemin', 'groupe_id',
+                'telephone', 'email', 'date_adhesion', 'photo_chemin', 'commission_id',
                 'statut', 'cree_par',
             ])->toArray());
 
@@ -76,14 +76,14 @@ class MembreController extends Controller
             return $nouveauMembre;
         });
 
-        return new MembreResource($membre->fresh(['groupe', 'donneesSensibles']));
+        return new MembreResource($membre->fresh(['commission', 'donneesSensibles']));
     }
 
     public function show(Membre $membre)
     {
         $this->authorize('view', $membre);
 
-        $membre->load('groupe');
+        $membre->load('commission');
 
         $donneeSensible = $membre->donneesSensibles ?? new DonneeSensibleMembre();
 
@@ -108,7 +108,7 @@ class MembreController extends Controller
 
             $membre->update(collect($donnees)->only([
                 'nom', 'prenom', 'sexe', 'date_naissance', 'niveau', 'profession',
-                'telephone', 'email', 'date_adhesion', 'photo_chemin', 'groupe_id',
+                'telephone', 'email', 'date_adhesion', 'photo_chemin', 'commission_id',
                 'statut',
             ])->toArray());
 
@@ -122,7 +122,7 @@ class MembreController extends Controller
             return $membre;
         });
 
-        return new MembreResource($membre->fresh(['groupe', 'donneesSensibles']));
+        return new MembreResource($membre->fresh(['commission', 'donneesSensibles']));
     }
 
     public function destroy(Membre $membre)

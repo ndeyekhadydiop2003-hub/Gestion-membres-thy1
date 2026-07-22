@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { X, UserPlus, Pencil, Trash2 } from 'lucide-react';
-import { groupesApi } from './groupesApi';
+import { commissionsApi } from './commissionsApi';
 
-export default function GroupeMembresModal({ groupe, onFermer }) {
+export default function CommissionMembresModal({ commission, onFermer }) {
   const [membres, setMembres] = useState([]);
   const [chargement, setChargement] = useState(true);
   const [formOuvert, setFormOuvert] = useState(false);
@@ -18,10 +18,10 @@ export default function GroupeMembresModal({ groupe, onFermer }) {
 
   const charger = () => {
     setChargement(true);
-    groupesApi.membres(groupe.id).then((r) => setMembres(r.data)).finally(() => setChargement(false));
+    commissionsApi.membres(commission.id).then((r) => setMembres(r.data)).finally(() => setChargement(false));
   };
 
-  useEffect(() => { charger(); }, [groupe.id]);
+  useEffect(() => { charger(); }, [commission.id]);
 
   /* ── Ajouter ── */
   const ajouter = async (e) => {
@@ -29,7 +29,7 @@ export default function GroupeMembresModal({ groupe, onFermer }) {
     setErreurs({});
     setEnregistrement(true);
     try {
-      await groupesApi.ajouterMembre(groupe.id, { nom, prenom, sexe, telephone });
+      await commissionsApi.ajouterMembre(commission.id, { nom, prenom, sexe, telephone });
       setNom(''); setPrenom(''); setTelephone(''); setSexe('M');
       setFormOuvert(false);
       charger();
@@ -51,7 +51,7 @@ export default function GroupeMembresModal({ groupe, onFermer }) {
     e.preventDefault();
     setEnregistrement(true);
     try {
-      await groupesApi.modifierMembre(membreEnEdition.id, {
+      await commissionsApi.modifierMembre(membreEnEdition.id, {
         nom: membreEnEdition._nom,
         prenom: membreEnEdition._prenom,
         sexe: membreEnEdition._sexe,
@@ -63,12 +63,12 @@ export default function GroupeMembresModal({ groupe, onFermer }) {
     finally { setEnregistrement(false); }
   };
 
-  /* ── Supprimer du groupe ── */
+  /* ── Retirer de la commission ── */
   const retirerMembre = async (e, m) => {
     e.stopPropagation();
-    if (!confirm(`Retirer "${m.nom} ${m.prenom}" du groupe ?`)) return;
+    if (!confirm(`Retirer "${m.nom} ${m.prenom}" de la commission ?`)) return;
     try {
-      await groupesApi.supprimerMembre(groupe.id, m.id);
+      await commissionsApi.supprimerMembre(commission.id, m.id);
       charger();
     } catch (err) { alert(err.message); }
   };
@@ -80,8 +80,8 @@ export default function GroupeMembresModal({ groupe, onFermer }) {
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 sticky top-0 bg-white">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: groupe.couleur }} />
-            <h2 className="text-lg font-semibold text-slate-900">{groupe.nom}</h2>
+            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: commission.couleur }} />
+            <h2 className="text-lg font-semibold text-slate-900">{commission.nom}</h2>
           </div>
           <button onClick={onFermer} className="text-slate-400 hover:text-slate-600">
             <X className="w-5 h-5" />
@@ -169,7 +169,7 @@ export default function GroupeMembresModal({ groupe, onFermer }) {
           {chargement ? (
             <p className="text-sm text-slate-400">Chargement...</p>
           ) : membres.length === 0 ? (
-            <p className="text-sm text-slate-400 text-center py-8">Aucun membre dans ce groupe pour le moment.</p>
+            <p className="text-sm text-slate-400 text-center py-8">Aucun membre dans cette commission pour le moment.</p>
           ) : (
             <ul className="space-y-1">
               {membres.map((m) => (

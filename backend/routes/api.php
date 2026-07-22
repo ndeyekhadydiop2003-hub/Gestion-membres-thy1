@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MembreController;
-use App\Http\Controllers\GroupeController;
+use App\Http\Controllers\CommissionController;
 use App\Http\Controllers\ProgrammeController;
 use App\Http\Controllers\SeanceController;
 use App\Http\Controllers\PresenceController;
@@ -27,16 +27,21 @@ Route::prefix('v1')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('moi', [AuthController::class, 'utilisateurConnecte']);
 
+        // ── Paramètres du compte connecté ───────────────────────────────
+        Route::put('profil', [AuthController::class, 'mettreAJourProfil']);
+        Route::put('mot-de-passe', [AuthController::class, 'changerMotDePasse']);
+        Route::post('deconnecter-autres-appareils', [AuthController::class, 'deconnecterAutresAppareils']);
+
         // ── Tableau de bord ─────────────────────────────────────────────
         Route::get('dashboard/statistiques', [DashboardController::class, 'statistiques']);
 
         // ── Membres ──────────────────────────────────────────────────────
         Route::apiResource('membres', MembreController::class);
 
-        // ── Groupes ──────────────────────────────────────────────────────
-        Route::apiResource('groupes', GroupeController::class);
-        Route::get('groupes/{groupe}/membres', [GroupeController::class, 'membres']);
-        Route::post('groupes/{groupe}/membres', [GroupeController::class, 'ajouterMembre']);
+        // ── Commissions ──────────────────────────────────────────────────
+        Route::apiResource('commissions', CommissionController::class);
+        Route::get('commissions/{commission}/membres', [CommissionController::class, 'membres']);
+        Route::post('commissions/{commission}/membres', [CommissionController::class, 'ajouterMembre']);
 
         // ── Programmes ───────────────────────────────────────────────────
         Route::apiResource('programmes', ProgrammeController::class);
@@ -48,6 +53,8 @@ Route::prefix('v1')->group(function () {
             Route::get('presences', [PresenceController::class, 'index']);
             Route::post('presences', [PresenceController::class, 'marquer']);
             Route::post('presences/{membre}', [PresenceController::class, 'marquerUnique']);
+            Route::post('autres', [PresenceController::class, 'ajouterAutre']);
+            Route::delete('autres/{presence}', [PresenceController::class, 'supprimerAutre']);
             Route::get('membres-presence', [PresenceController::class, 'membresAvecPresence']);
         });
 

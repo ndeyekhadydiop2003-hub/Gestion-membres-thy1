@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Groupe extends Model
+class Commission extends Model
 {
     protected $fillable = [
         'nom',
@@ -14,7 +14,7 @@ class Groupe extends Model
 
     public function membres()
     {
-        return $this->hasMany(Membre::class, 'groupe_id');
+        return $this->hasMany(Membre::class, 'commission_id');
     }
 
     public function messagesGroupes()

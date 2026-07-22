@@ -6,7 +6,7 @@ use App\Http\Requests\StoreMessageGroupeRequest;
 use App\Http\Resources\MessageGroupeResource;
 use App\Jobs\EnvoyerMessageGroupeJob;
 use App\Models\DestinataireMessage;
-use App\Models\Groupe;
+use App\Models\Commission;
 use App\Models\Membre;
 use App\Models\MessageGroupe;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +21,7 @@ class MessagerieController extends Controller
 
         $totalMembres = Membre::where('statut', 'actif')->count();
 
-        $groupes = Groupe::withCount(['membres' => function ($q) {
+        $groupes = Commission::withCount(['membres' => function ($q) {
             $q->where('statut', 'actif');
         }])->orderBy('nom')->get();
 
@@ -83,7 +83,7 @@ class MessagerieController extends Controller
             // Construire la liste des destinataires (membres actifs uniquement)
             $membresQuery = Membre::where('statut', 'actif');
             if ($donnees['type_cible'] === 'groupe') {
-                $membresQuery->where('groupe_id', $donnees['groupe_id']);
+                $membresQuery->where('commission_id', $donnees['groupe_id']);
             }
             $membres = $membresQuery->get(['id']);
 

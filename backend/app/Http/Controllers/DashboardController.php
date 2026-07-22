@@ -10,6 +10,7 @@ use App\Models\Presence;
 use App\Models\Programme;
 use App\Models\Seance;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -33,16 +34,29 @@ class DashboardController extends Controller
             ->count();
 
         // --- 2. Évolution & Répartitions ---
-        $adhesionsParMois = Membre::selectRaw('MONTH(date_adhesion) as mois, YEAR(date_adhesion) as annee, COUNT(*) as total')
-            ->where('date_adhesion', '>=', now()->subMonths(11)->startOfMonth())
-            ->groupBy('annee', 'mois')
-            ->orderBy('annee')
-            ->orderBy('mois')
-            ->get()
-            ->map(fn ($ligne) => [
-                'mois' => Carbon::create($ligne->annee, $ligne->mois, 1)->translatedFormat('M'),
-                'total' => $ligne->total,
-            ]);
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            $adhesionsParMois = Membre::selectRaw("strftime('%m', date_adhesion) as mois, strftime('%Y', date_adhesion) as annee, COUNT(*) as total")
+                ->where('date_adhesion', '>=', now()->subMonths(11)->startOfMonth())
+                ->groupBy('annee', 'mois')
+                ->orderBy('annee')
+                ->orderBy('mois')
+                ->get()
+                ->map(fn ($ligne) => [
+                    'mois' => Carbon::create((int) $ligne->annee, (int) $ligne->mois, 1)->translatedFormat('M'),
+                    'total' => $ligne->total,
+                ]);
+        } else {
+            $adhesionsParMois = Membre::selectRaw('MONTH(date_adhesion) as mois, YEAR(date_adhesion) as annee, COUNT(*) as total')
+                ->where('date_adhesion', '>=', now()->subMonths(11)->startOfMonth())
+                ->groupBy('annee', 'mois')
+                ->orderBy('annee')
+                ->orderBy('mois')
+                ->get()
+                ->map(fn ($ligne) => [
+                    'mois' => Carbon::create($ligne->annee, $ligne->mois, 1)->translatedFormat('M'),
+                    'total' => $ligne->total,
+                ]);
+        }
 
         $repartitionSexe = Membre::where('statut', 'actif')
             ->selectRaw('sexe, COUNT(*) as total')
@@ -120,7 +134,7 @@ class DashboardController extends Controller
             ->take(6);
 
         // --- 6. Listes récentes ---
-        $derniersMembres = Membre::with('groupe')
+        $derniersMembres = Membre::with('commission')
             ->orderByDesc('created_at')
             ->take(5)
             ->get()

@@ -21,7 +21,7 @@ class Membre extends Model
         'date_adhesion',
         'photo_chemin',
         'statut',
-        'groupe_id',
+        'commission_id',
         'cree_par',
     ];
 
@@ -34,9 +34,9 @@ class Membre extends Model
     }
 
     // Relations
-    public function groupe()
+    public function commission()
     {
-        return $this->belongsTo(Groupe::class, 'groupe_id');
+        return $this->belongsTo(Commission::class, 'commission_id');
     }
 
     public function createur()

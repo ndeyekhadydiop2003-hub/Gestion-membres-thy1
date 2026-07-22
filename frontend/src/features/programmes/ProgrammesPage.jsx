@@ -153,7 +153,6 @@ export default function ProgrammesPage() {
                     <div className="flex items-center gap-2 shrink-0 text-xs font-medium">
                       <span className="bg-green-50 text-green-700 px-2.5 py-1 rounded-full">{s.presents ?? 0} présents</span>
                       <span className="bg-red-50 text-red-700 px-2.5 py-1 rounded-full">{s.absents ?? 0} absents</span>
-                      <span className="bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full">{s.excuses ?? 0} excusés</span>
                     </div>
                     <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-500 shrink-0" />
                   </button>

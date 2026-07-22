@@ -5,21 +5,21 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateGroupeRequest extends FormRequest
+class UpdateCommissionRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('update', $this->route('groupe'));
+        return $this->user()->can('update', $this->route('commission'));
     }
 
     public function rules(): array
     {
-        $groupeId = $this->route('groupe')->id;
+        $commissionId = $this->route('commission')->id;
 
         return [
             'nom' => [
                 'sometimes', 'required', 'string', 'max:100',
-                Rule::unique('groupes', 'nom')->ignore($groupeId),
+                Rule::unique('commissions', 'nom')->ignore($commissionId),
             ],
             'description' => 'nullable|string|max:500',
             'couleur' => 'nullable|string|max:7',
@@ -29,8 +29,8 @@ class UpdateGroupeRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nom.required' => 'Le nom du groupe est obligatoire.',
-            'nom.unique' => 'Un groupe avec ce nom existe déjà.',
+            'nom.required' => 'Le nom de la commission est obligatoire.',
+            'nom.unique' => 'Une commission avec ce nom existe déjà.',
         ];
     }
 }

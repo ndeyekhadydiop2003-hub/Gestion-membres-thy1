@@ -5,7 +5,7 @@ import { useToast } from '../../context/ToastContext';
 
 const GROUPES_SANGUINS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
-export default function MembreFormModal({ membre, groupes, onFermer, onEnregistre }) {
+export default function MembreFormModal({ membre, commissions, onFermer, onEnregistre }) {
   const { showToast } = useToast();
   const estModification = !!membre;
 
@@ -19,7 +19,7 @@ export default function MembreFormModal({ membre, groupes, onFermer, onEnregistr
     telephone: membre?.telephone || '',
     email: membre?.email || '',
     date_adhesion: membre?.date_adhesion || new Date().toISOString().slice(0, 10),
-    groupe_id: membre?.groupe?.id || '',
+    commission_id: membre?.commission?.id || '',
     statut: membre?.statut || 'actif',
     nin: '',
     numero_electeur: '',
@@ -115,11 +115,11 @@ export default function MembreFormModal({ membre, groupes, onFermer, onEnregistr
             <Champ label="Date d'adhésion" erreur={erreurs.date_adhesion}>
               <input type="date" value={form.date_adhesion} onChange={(e) => modifierChamp('date_adhesion', e.target.value)} required className="champ" />
             </Champ>
-            <Champ label="Groupe" erreur={erreurs.groupe_id}>
-              <select value={form.groupe_id} onChange={(e) => modifierChamp('groupe_id', e.target.value)} className="champ">
-                <option value="">Aucun groupe</option>
-                {groupes.map((g) => (
-                  <option key={g.id} value={g.id}>{g.nom}</option>
+            <Champ label="Commission" erreur={erreurs.commission_id}>
+              <select value={form.commission_id} onChange={(e) => modifierChamp('commission_id', e.target.value)} className="champ">
+                <option value="">Aucune commission</option>
+                {commissions.map((c) => (
+                  <option key={c.id} value={c.id}>{c.nom}</option>
                 ))}
               </select>
             </Champ>

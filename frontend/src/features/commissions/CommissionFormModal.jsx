@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
-import { groupesApi } from './groupesApi';
+import { commissionsApi } from './commissionsApi';
 import { useToast } from '../../context/ToastContext';
 
 const COULEURS = ['#15293f', '#2c4f7c', '#5b9bd5', '#e8a548', '#e07a5f', '#81b29a', '#a68cc4', '#6b7280'];
 
-export default function GroupeFormModal({ groupe, onFermer, onEnregistre }) {
+export default function CommissionFormModal({ commission, onFermer, onEnregistre }) {
   const { showToast } = useToast();
-  const estModification = !!groupe;
+  const estModification = !!commission;
 
-  const [nom, setNom] = useState(groupe?.nom || '');
-  const [description, setDescription] = useState(groupe?.description || '');
-  const [couleur, setCouleur] = useState(groupe?.couleur || COULEURS[0]);
+  const [nom, setNom] = useState(commission?.nom || '');
+  const [description, setDescription] = useState(commission?.description || '');
+  const [couleur, setCouleur] = useState(commission?.couleur || COULEURS[0]);
   const [erreurs, setErreurs] = useState({});
   const [enregistrement, setEnregistrement] = useState(false);
 
@@ -22,11 +22,11 @@ export default function GroupeFormModal({ groupe, onFermer, onEnregistre }) {
 
     try {
       if (estModification) {
-        await groupesApi.modifier(groupe.id, { nom, description, couleur });
+        await commissionsApi.modifier(commission.id, { nom, description, couleur });
       } else {
-        await groupesApi.creer({ nom, description, couleur });
+        await commissionsApi.creer({ nom, description, couleur });
       }
-      showToast(estModification ? 'Groupe modifié avec succès.' : 'Groupe créé avec succès.');
+      showToast(estModification ? 'Commission modifiée avec succès.' : 'Commission créée avec succès.');
       onEnregistre();
     } catch (err) {
       if (err.donnees?.errors) setErreurs(err.donnees.errors);
@@ -41,7 +41,7 @@ export default function GroupeFormModal({ groupe, onFermer, onEnregistre }) {
       <div className="bg-white rounded-xl w-full max-w-md">
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
           <h2 className="text-lg font-semibold text-slate-900">
-            {estModification ? 'Modifier le groupe' : 'Nouveau groupe'}
+            {estModification ? 'Modifier la commission' : 'Nouvelle commission'}
           </h2>
           <button onClick={onFermer} className="text-slate-400 hover:text-slate-600">
             <X className="w-5 h-5" />
@@ -50,7 +50,7 @@ export default function GroupeFormModal({ groupe, onFermer, onEnregistre }) {
 
         <form onSubmit={soumettre} className="p-6 space-y-5">
           <div>
-            <label className="text-sm font-medium text-slate-700 block mb-1.5">Nom du groupe</label>
+            <label className="text-sm font-medium text-slate-700 block mb-1.5">Nom de la commission</label>
             <input value={nom} onChange={(e) => setNom(e.target.value)} required className="champ" />
             {erreurs.nom && <p className="text-xs text-red-600 mt-1">{erreurs.nom[0]}</p>}
           </div>
@@ -81,7 +81,7 @@ export default function GroupeFormModal({ groupe, onFermer, onEnregistre }) {
               Annuler
             </button>
             <button type="submit" disabled={enregistrement} className="px-5 py-2.5 rounded-lg bg-[#2c4f7c] text-white text-sm font-medium hover:opacity-90 disabled:opacity-60">
-              {enregistrement ? 'Enregistrement...' : estModification ? 'Enregistrer' : 'Créer le groupe'}
+              {enregistrement ? 'Enregistrement...' : estModification ? 'Enregistrer' : 'Créer la commission'}
             </button>
           </div>
         </form>

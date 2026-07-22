@@ -58,7 +58,7 @@ export default function MembreDetailModal({ membreId, onFermer }) {
               <Info icone={Calendar} label="Adhésion" valeur={membre.date_adhesion} />
               <Info label="Profession" valeur={membre.profession} />
               <Info label="Niveau" valeur={membre.niveau} />
-              <Info label="Groupe" valeur={membre.groupe?.nom} />
+              <Info label="Commission" valeur={membre.commission?.nom} />
             </div>
 
             {membre.donnees_sensibles ? (

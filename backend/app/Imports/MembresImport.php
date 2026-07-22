@@ -3,7 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Membre;
-use App\Models\Groupe;
+use App\Models\Commission;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -21,10 +21,10 @@ class MembresImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnE
 
     public function model(array $row)
     {
-        $groupeId = null;
-        if (!empty($row['groupe'])) {
-            $groupe = Groupe::where('nom', $row['groupe'])->first();
-            $groupeId = $groupe?->id;
+        $commissionId = null;
+        if (!empty($row['commission'])) {
+            $commission = Commission::where('nom', $row['commission'])->first();
+            $commissionId = $commission?->id;
         }
 
         $this->nombreImportes++;
@@ -39,7 +39,7 @@ class MembresImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnE
             'telephone' => $row['telephone'] ?? null,
             'email' => $row['email'] ?? null,
             'date_adhesion' => $row['date_adhesion'] ?? now(),
-            'groupe_id' => $groupeId,
+            'commission_id' => $commissionId,
             'statut' => 'actif',
             'cree_par' => Auth::id(),
         ]);

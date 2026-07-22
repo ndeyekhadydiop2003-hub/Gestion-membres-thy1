@@ -16,7 +16,7 @@ class MarquerPresenceRequest extends FormRequest
         return [
             'presences' => 'required|array|min:1',
             'presences.*.membre_id' => 'required|exists:membres,id',
-            'presences.*.statut' => 'required|in:present,absent,excuse',
+            'presences.*.statut' => 'required|in:present,absent',
         ];
     }
 

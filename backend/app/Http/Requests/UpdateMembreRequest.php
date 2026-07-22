@@ -32,7 +32,7 @@ class UpdateMembreRequest extends FormRequest
             ],
             'date_adhesion' => 'sometimes|required|date',
             'photo' => 'nullable|image|max:2048',
-            'groupe_id' => 'nullable|exists:groupes,id',
+            'commission_id' => 'nullable|exists:commissions,id',
             'statut' => 'nullable|in:actif,inactif,suspendu',
 
             'nin' => 'nullable|string|max:50',
@@ -48,7 +48,7 @@ class UpdateMembreRequest extends FormRequest
             'email.unique' => 'Cet email est déjà utilisé par un autre membre.',
             'photo.image' => 'Le fichier doit être une image.',
             'photo.max' => 'La photo ne doit pas dépasser 2 Mo.',
-            'groupe_id.exists' => "Le groupe sélectionné n'existe pas.",
+            'commission_id.exists' => "La commission sélectionnée n'existe pas.",
         ];
     }
 }

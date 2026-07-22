@@ -5,10 +5,11 @@ import LoginPage from './features/auth/LoginPage';
 import AppLayout from './components/layout/AppLayout';
 import DashboardPage from './features/dashboard/DashboardPage';
 import MembresPage from './features/membres/MembresPage';
-import GroupesPage from './features/groupes/GroupesPage';
+import CommissionsPage from './features/commissions/CommissionsPage';
 import ProgrammesPage from './features/programmes/ProgrammesPage';
 import ImportExportPage from './features/import-export/ImportExportPage';
 import SecuriteRolesPage from './features/securite/SecuriteRolesPage';
+import ParametresPage from './features/parametres/ParametresPage';
 import ActivationPage from './features/auth/ActivationPage';
 
 function Contenu() {
@@ -31,10 +32,11 @@ function Contenu() {
     <AppLayout pageActive={pageActive} onNaviguer={setPageActive}>
       {pageActive === 'dashboard'   && <DashboardPage />}
       {pageActive === 'membres'     && <MembresPage />}
-      {pageActive === 'groupes'     && <GroupesPage />}
+      {pageActive === 'commissions' && <CommissionsPage />}
       {pageActive === 'programmes'  && <ProgrammesPage />}
       {pageActive === 'import-export' && <ImportExportPage />}
       {pageActive === 'securite' && <SecuriteRolesPage />}
+      {pageActive === 'parametres' && <ParametresPage />}
     </AppLayout>
   );
 }

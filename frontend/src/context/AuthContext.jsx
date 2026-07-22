@@ -36,10 +36,16 @@ export function AuthProvider({ children }) {
     setUtilisateur(null);
   };
 
+  const mettreAJourUtilisateur = (donneesPartielles) => {
+    setUtilisateur((precedent) => ({ ...precedent, ...donneesPartielles }));
+  };
+
   const estSuperAdmin = utilisateur?.role === 'super_admin';
 
   return (
-    <AuthContext.Provider value={{ utilisateur, chargement, connecter, deconnecter, estSuperAdmin }}>
+    <AuthContext.Provider
+      value={{ utilisateur, chargement, connecter, deconnecter, mettreAJourUtilisateur, estSuperAdmin }}
+    >
       {children}
     </AuthContext.Provider>
   );

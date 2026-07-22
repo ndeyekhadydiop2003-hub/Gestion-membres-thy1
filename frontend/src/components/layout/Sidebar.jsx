@@ -4,7 +4,6 @@ import {
   Users,
   UsersRound,
   CalendarCheck,
-  Mail,
   FileSpreadsheet,
   ShieldCheck,
   Settings,
@@ -14,12 +13,11 @@ import {
 const ONGLETS = [
   { cle: 'dashboard', label: 'Tableau de bord', icone: LayoutDashboard, reserveSuperAdmin: false },
   { cle: 'membres', label: 'Membres', icone: Users, reserveSuperAdmin: false },
-  { cle: 'groupes', label: 'Groupes', icone: UsersRound, reserveSuperAdmin: false },
+  { cle: 'commissions', label: 'Commissions', icone: UsersRound, reserveSuperAdmin: false },
   { cle: 'programmes', label: 'Programmes', icone: CalendarCheck, reserveSuperAdmin: false },
-  { cle: 'messagerie', label: 'Messagerie', icone: Mail, reserveSuperAdmin: false },
   { cle: 'import-export', label: 'Import/Export', icone: FileSpreadsheet, reserveSuperAdmin: false },
   { cle: 'securite', label: 'Sécurité & rôles', icone: ShieldCheck, reserveSuperAdmin: true },
-  { cle: 'parametres', label: 'Paramètres', icone: Settings, reserveSuperAdmin: true },
+  { cle: 'parametres', label: 'Paramètres', icone: Settings, reserveSuperAdmin: false },
 ];
 
 export default function Sidebar({ pageActive, onNaviguer }) {

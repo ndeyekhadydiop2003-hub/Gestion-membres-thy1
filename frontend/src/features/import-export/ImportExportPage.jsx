@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Upload, Download, FileSpreadsheet, CheckCircle2, AlertTriangle, Users, FileDown } from 'lucide-react';
 import { importExportApi } from './importExportApi';
-import { groupesApi } from '../groupes/groupesApi';
+import { commissionsApi } from '../commissions/commissionsApi';
 import { useToast } from '../../context/ToastContext';
 
 const COLONNES_DISPONIBLES = [
@@ -17,7 +17,7 @@ const COLONNES_DISPONIBLES = [
 
 export default function ImportExportPage() {
   const { showToast } = useToast();
-  const [groupes, setGroupes] = useState([]);
+  const [commissions, setCommissions] = useState([]);
   const [historique, setHistorique] = useState([]);
 
   const [fichierMembres, setFichierMembres] = useState(null);
@@ -26,11 +26,11 @@ export default function ImportExportPage() {
 
   const [colonnes, setColonnes] = useState(['nom_prenom', 'sexe_age', 'profession', 'telephone', 'adhesion']);
   const [masquerSensibles, setMasquerSensibles] = useState(true);
-  const [groupeIdExport, setGroupeIdExport] = useState('');
+  const [commissionIdExport, setCommissionIdExport] = useState('');
   const [exportEnCours, setExportEnCours] = useState(false);
 
   useEffect(() => {
-    groupesApi.lister().then((r) => setGroupes(r.data));
+    commissionsApi.lister().then((r) => setCommissions(r.data));
     chargerHistorique();
   }, []);
 
@@ -76,7 +76,7 @@ export default function ImportExportPage() {
   const exporter = async () => {
     setExportEnCours(true);
     try {
-      const blob = await importExportApi.exporter(colonnes, masquerSensibles, groupeIdExport);
+      const blob = await importExportApi.exporter(colonnes, masquerSensibles, commissionIdExport);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -166,9 +166,9 @@ export default function ImportExportPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-4 mb-5">
-          <select value={groupeIdExport} onChange={(e) => setGroupeIdExport(e.target.value)} className="champ w-auto">
-            <option value="">Tous les groupes</option>
-            {groupes.map((g) => <option key={g.id} value={g.id}>{g.nom}</option>)}
+          <select value={commissionIdExport} onChange={(e) => setCommissionIdExport(e.target.value)} className="champ w-auto">
+            <option value="">Toutes les commissions</option>
+            {commissions.map((c) => <option key={c.id} value={c.id}>{c.nom}</option>)}
           </select>
 
           <label className="flex items-center gap-2 text-sm text-slate-600">
